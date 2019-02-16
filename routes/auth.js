@@ -1,3 +1,4 @@
+const config = require('config');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const {User} = require('../models/user');
@@ -18,7 +19,8 @@ router.post('/', async(req, res)=> {
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if(!validPassword) return res.status(400).send('Invalid email/password');
 
-    const token = jwt.sign({_id: user._id}, 'jwtPrivateKey');
+    //jwtPrivatekey is the name of the app setting
+    const token = jwt.sign({_id: user._id}, config.get('jwtPrivateKey'));
     return res.send(token);
 });
 

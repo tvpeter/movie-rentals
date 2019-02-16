@@ -29,8 +29,8 @@ router.post('/', async(req, res)=>{
         dailyRentalRate: req.body.dailyRentalRate
     });
 
-    const result = await movie.save();
-    return res.send(result);
+    await movie.save();
+    return res.send(movie);
 });
 
 router.get('/:id', async(req, res)=>{
