@@ -1,6 +1,4 @@
-const config = require('config');
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const {User} = require('../models/user');
 const _ = require('lodash');
 const Joi = require('joi');
@@ -20,7 +18,8 @@ router.post('/', async(req, res)=> {
     if(!validPassword) return res.status(400).send('Invalid email/password');
 
     //jwtPrivatekey is the name of the app setting
-    const token = jwt.sign({_id: user._id}, config.get('jwtPrivateKey'));
+    //const token = jwt.sign({_id: user._id}, config.get('jwtPrivateKey'));
+    const token = user.generateAuthToken();
     return res.send(token);
 });
 
