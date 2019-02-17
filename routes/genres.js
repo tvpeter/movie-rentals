@@ -1,6 +1,7 @@
 const express = require('express');
 const {Genre, validate} = require('../models/genres');
 const router = express.Router();
+const auth = require('../middlewares/auth');
 
 // const genres = [
 //     { id: 1, title:'Black Panther', year: 2018, publisher: 'Nollywood'},
@@ -16,7 +17,7 @@ router.get('/', async (req, res)=>{
     res.send(genres);
 });
 
-router.post('/', async (req, res)=>{
+router.post('/', auth, async (req, res)=>{
 
     // const schema = {
     //     title: Joi.string().required().min(5),
@@ -61,7 +62,7 @@ router.get('/:id', async (req, res)=>{
     return res.send(genre);
 });
 
-router.put('/:id', async (req, res)=>{
+router.put('/:id', auth, async (req, res)=>{
     //validate the request that it contains what to change
     //if not return 400
 
@@ -96,7 +97,7 @@ router.put('/:id', async (req, res)=>{
      res.send(genre);
 });
 
-router.delete('/:id', async (req, res)=>{
+router.delete('/:id', auth, async (req, res)=>{
     //validate the request
     // const schema = {
     //     id: Joi.integer().required()

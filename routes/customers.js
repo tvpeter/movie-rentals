@@ -1,6 +1,6 @@
 const express = require('express');
 const {Customer, validate} = require('../models/customers');
-
+const auth = require('../middlewares/auth');
 const router = express.Router();
 
 
@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) =>{
     return res.send(customer);
 });
 
-router.post('/', async (req, res)=>{
+router.post('/', auth, async (req, res)=>{
     //validate the payload
     // const schema = {
     //     name: Joi.string().required().min(4).max(20),
@@ -48,7 +48,7 @@ router.post('/', async (req, res)=>{
     return res.send(newCustomer);
 });
 
-router.put('/:id', async (req, res)=>{
+router.put('/:id', auth, async (req, res)=>{
     // const schema = Joi.object().keys({
     //     name: Joi.string().required().min(4).max(20),
     //     phone: Joi.string().required().min(5).max(12),
