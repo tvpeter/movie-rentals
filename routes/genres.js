@@ -2,6 +2,7 @@ const express = require('express');
 const {Genre, validate} = require('../models/genres');
 const router = express.Router();
 const auth = require('../middlewares/auth');
+const admin = require('../middlewares/admin');
 
 // const genres = [
 //     { id: 1, title:'Black Panther', year: 2018, publisher: 'Nollywood'},
@@ -97,7 +98,7 @@ router.put('/:id', auth, async (req, res)=>{
      res.send(genre);
 });
 
-router.delete('/:id', auth, async (req, res)=>{
+router.delete('/:id', [auth, admin], async (req, res)=>{
     //validate the request
     // const schema = {
     //     id: Joi.integer().required()
