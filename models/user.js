@@ -41,7 +41,8 @@ function validateUser(user){
     const schema = {
         name: Joi.string().min(2).max(40).required(),
         email: Joi.string().required().email(),
-        password: Joi.string().min(4).max(50).required()
+        password: Joi.string().min(4).max(50).required(),
+        isAdmin:Joi.boolean()
     }
     return Joi.validate(user, schema);
 }
