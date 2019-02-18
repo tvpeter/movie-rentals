@@ -3,15 +3,14 @@ const {Genre, validate} = require('../models/genres');
 const router = express.Router();
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
-const asyncMiddleware = require('../middlewares/async');
 
 
-router.get('/', asyncMiddleware( async (req, res, next)=>{
+router.get('/',  async (req, res, next)=>{
         const genres = await Genre.find().sort('title');
         res.send(genres);
-}));
+});
 
-router.post('/', auth, asyncMiddleware(async (req, res)=>{
+router.post('/', auth, async (req, res)=>{
 
     const { error } = validate(req.body);
     // if(result.error) return res.status(400).send(result.error.details[0].message);
@@ -30,9 +29,9 @@ router.post('/', auth, asyncMiddleware(async (req, res)=>{
     //genres.push(genre);
     
    return res.send(rs);
-}));
+});
 
-router.get('/:id', asyncMiddleware(async (req, res)=>{
+router.get('/:id', async (req, res)=>{
     // const schema = {
     //     id: Joi.number().integer().required()
     // }
@@ -46,9 +45,9 @@ router.get('/:id', asyncMiddleware(async (req, res)=>{
     if(!genre) return res.status(404).send('Movie not found');
 
     return res.send(genre);
-}));
+});
 
-router.put('/:id', auth, asyncMiddleware(async (req, res)=>{
+router.put('/:id', auth, async (req, res)=>{
     //validate the request that it contains what to change
     //if not return 400
 
@@ -81,9 +80,9 @@ router.put('/:id', auth, asyncMiddleware(async (req, res)=>{
     // if(req.body.year) genre.year = req.body.year;
     // if(req.body.publisher) genre.publisher = req.body.publisher;
      res.send(genre);
-}));
+});
 
-router.delete('/:id', [auth, admin], asyncMiddleware(async (req, res)=>{
+router.delete('/:id', [auth, admin], async (req, res)=>{
     //validate the request
     // const schema = {
     //     id: Joi.integer().required()
@@ -104,6 +103,6 @@ router.delete('/:id', [auth, admin], asyncMiddleware(async (req, res)=>{
 
     //return the item
      res.send(genre);
-}));
+});
 
 module.exports = router;
