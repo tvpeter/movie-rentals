@@ -6,8 +6,8 @@ const admin = require('../middlewares/admin');
 
 
 router.get('/',  async (req, res, next)=>{
-        const genres = await Genre.find().sort('title');
-        res.send(genres);
+    const genres = await Genre.find().sort('title');
+    res.send(genres);
 });
 
 router.post('/', auth, async (req, res)=>{

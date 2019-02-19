@@ -1,3 +1,4 @@
+const winston = require('winston');
 require('express-async-errors');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
@@ -12,6 +13,9 @@ const users = require('./routes/user');
 const auth = require('./routes/auth');
 const config = require('config');
 const error = require('./middlewares/error');
+
+//add transport for winston to log into file
+winston.add(winston.transports.File, { filename: 'logfile.log'});
 
 const app = express();
 if(!config.get('jwtPrivateKey')){
