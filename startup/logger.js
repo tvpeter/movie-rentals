@@ -5,7 +5,7 @@ require('express-async-errors');
 module.exports = function () {
 //add transport for winston to log into file
 winston.add(winston.transports.File, { filename: 'logfile.log'});
-winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/movies', level:'warn' })
+winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/movies', level:'warn' });
 
 //using the process object to log unhandled exceptions
 // process.on('uncaughtException', (err)=>{
@@ -13,6 +13,7 @@ winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/movies', leve
 //     winston.error(err.message, err);
 // });
 
+//LOGGING TO CONSOLE INFO 
 
 
 //example of an exception that may occur outside requests cycle and how to handle it
@@ -24,7 +25,10 @@ winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/movies', leve
 
 
 //using winston to catch exceptions
-winston.handleExceptions(new winston.transports.File({ filename: 'uncaoughtExceptions.log'}));
+winston.handleExceptions(
+    new winston.transports.Console({colorize: true, prettyPrint: true}),
+    new winston.transports.File({ filename: 'uncaoughtExceptions.log'}));
+
 
 //catching unhandledRejection
 process.on('unhandledRejection', (err)=> {
