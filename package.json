@@ -21,6 +21,7 @@
     "lodash": "4.17.11",
     "mongoose": "5.4.7",
     "nodemon": "1.18.10",
-    "winston": "2.4.4"
+    "winston": "2.4.4",
+    "winston-mongodb": "3.0.0"
   }
 }
