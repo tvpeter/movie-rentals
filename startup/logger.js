@@ -13,8 +13,6 @@ winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/movies', leve
 //     winston.error(err.message, err);
 // });
 
-//LOGGING TO CONSOLE INFO 
-
 
 //example of an exception that may occur outside requests cycle and how to handle it
 //throw new Error('There was an error during startup');
