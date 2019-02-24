@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 const mongoose = require('mongoose');
+const validateObjectId = require('../middlewares/validateObjectId');
 
 
 router.get('/',  async (req, res, next)=>{
@@ -33,7 +34,7 @@ router.post('/', auth, async (req, res)=>{
    return res.send(rs);
 });
 
-router.get('/:id', async (req, res)=>{
+router.get('/:id', validateObjectId, async (req, res)=>{
     // const schema = {
     //     id: Joi.number().integer().required()
     // }
@@ -42,7 +43,8 @@ router.get('/:id', async (req, res)=>{
 
     // const genre = genres.find(genre=>genre.id === parseInt(req.params.id));
 
-    if(!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).send('Invalid id');
+    //Moving this to middleware
+    //if(!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).send('Invalid id');
 
     const genre = await Genre.findById(req.params.id);
 
