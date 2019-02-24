@@ -16,12 +16,10 @@ router.get('/',  async (req, res, next)=>{
 router.post('/', auth, async (req, res)=>{
 
     const { error } = validate(req.body);
-    // if(result.error) return res.status(400).send(result.error.details[0].message);
+    // if(result.error) 
     if(error) return res.status(400).send(error.details[0].message);
-
     
     const genre =  new Genre({
-        //id: genres.length+1,
         title: req.body.title,
         year: req.body.year,
         publisher : req.body.publisher

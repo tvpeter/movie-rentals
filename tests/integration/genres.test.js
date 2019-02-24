@@ -1,11 +1,12 @@
 const request = require('supertest');
 let server;
 const {Genre} = require('../../models/genres');
+const {User} = require('../../models/user');
 
 describe('/api/genres', ()=> {
     beforeEach(()=> { server = require('../../app'); })
     afterEach( async ()=> { server.close(); 
-       await Genre.remove({});
+       await Genre.deleteMany({});
     })
 
     describe('get genres', ()=> {
@@ -47,6 +48,39 @@ describe('/api/genres', ()=> {
                         .send({title: "The love of God", year: 2018, publisher: "Kings way"});
         expect(res.status).toBe(401);
         });
+
+       it('should return 400 if publisher is not supplied', async () =>{
+        //generate token for the user
+        const token = new User().generateAuthToken();
+
+        const genre = {title: "Favour am kind of feeling you", year: 2019};
+        const res = await request(server)
+            .post('/api/genres')
+            .set('x-auth-token', token)
+            .send(genre);
+        
+        expect(res.status).toBe(400);
+
+       });
+
+       it('should return 400 if title is less than 5 characters long', async ()=>{
+        //generate user token
+        const token = new User().generateAuthToken();
+        const genre = {title: "me", year: 2018, publisher: 'Things the mind conceives' }
+        const res = await request(server).post('/api/genres').set('x-auth-token', token).send(genre);
+        expect(res.status).toBe(400);
+
+       });
+
+       it('should return 400 if title is more than 50 characters long', async ()=>{
+        const token = new User().generateAuthToken();
+        const title = new Array(52).join('a');
+        const genre = {title, year: 2018, publisher: 'Things the mind conceives' }
+        const res = await request(server).post('/api/genres').set('x-auth-token', token).send(genre);
+        expect(res.status).toBe(400);
+
+       });
+
     });
 
 
