@@ -40,4 +40,14 @@ describe('/api/genres', ()=> {
 
         });
     });
+
+    describe('POST genres', ()=> {
+        it(`should return 401 if client is not logged in`, async ()=> {
+        const res = await request(server).post('/api/genres')
+                        .send({title: "The love of God", year: 2018, publisher: "Kings way"});
+        expect(res.status).toBe(401);
+        });
+    });
+
+
 });
