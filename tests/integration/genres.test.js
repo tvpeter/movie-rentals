@@ -43,41 +43,59 @@ describe('/api/genres', ()=> {
     });
 
     describe('POST genres', ()=> {
+
+        //define the complete request payload and change the variables as needed
+        let token, genre;
+        const exec = async () => {
+        return await request(server).post('/api/genres').set('x-auth-token', token).send(genre);
+
+        }
+
+        beforeEach( ()=> {
+         genre = { title: "The love in my eyes for you", year: 2019, publisher: "Eleganza Gardens City"};
+         token = new User().generateAuthToken();
+        });
+
+
         it(`should return 401 if client is not logged in`, async ()=> {
-        const res = await request(server).post('/api/genres')
-                        .send({title: "The love of God", year: 2018, publisher: "Kings way"});
+        token = '';
+        const res = await exec();
         expect(res.status).toBe(401);
         });
 
        it('should return 400 if publisher is not supplied', async () =>{
-        //generate token for the user
-        const token = new User().generateAuthToken();
-
-        const genre = {title: "Favour am kind of feeling you", year: 2019};
-        const res = await request(server)
-            .post('/api/genres')
-            .set('x-auth-token', token)
-            .send(genre);
-        
+        genre.publisher = '';
+        const res = await exec();
         expect(res.status).toBe(400);
-
        });
 
        it('should return 400 if title is less than 5 characters long', async ()=>{
-        //generate user token
-        const token = new User().generateAuthToken();
-        const genre = {title: "me", year: 2018, publisher: 'Things the mind conceives' }
-        const res = await request(server).post('/api/genres').set('x-auth-token', token).send(genre);
+        genre.title = 'Me';
+        const res = await exec();
+        expect(res.status).toBe(400);
+       });
+
+       it('should return 400 if title is more than 50 characters long', async ()=>{
+         genre.title = new Array(52).join('a');
+        const res = await exec();
         expect(res.status).toBe(400);
 
        });
 
-       it('should return 400 if title is more than 50 characters long', async ()=>{
-        const token = new User().generateAuthToken();
-        const title = new Array(52).join('a');
-        const genre = {title, year: 2018, publisher: 'Things the mind conceives' }
-        const res = await request(server).post('/api/genres').set('x-auth-token', token).send(genre);
-        expect(res.status).toBe(400);
+       it('should return save genre if it is valid', async ()=>{
+        await exec();
+        const res = Genre.findOne({title: 'The love in my eyes'});
+        expect(res).not.toBeNull();
+
+       });
+
+       it('should return genre if it is valid', async()=>{
+        const res = await exec();
+
+        expect(res.body).toHaveProperty(`_id`);
+        expect(res.body).toHaveProperty(`title`, `The love in my eyes for you`);
+        expect(res.body).toHaveProperty(`year`, 2019);
+        expect(res.body).toHaveProperty(`publisher`, `Eleganza Gardens City`);
 
        });
 
