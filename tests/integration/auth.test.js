@@ -1,10 +1,8 @@
 const request = require('supertest');
 const {User} = require('../../models/user');
-let server, token;
 describe('auth middleware', ()=>{
     beforeEach(()=> {
         server = require('../../app');
-        token = new User().generateAuthToken();
     });
     afterEach(()=> {
         server.close();
@@ -13,6 +11,12 @@ describe('auth middleware', ()=>{
     const exec = () => {
         return request(server).post('/api/genres').set('x-auth-token', token).send(genre);
     };
+    
+    let token;
+    beforeEach(() => {
+        token = new User().generateAuthToken();
+      });
+    
     
     it('should return 401 if token not provided', async ()=>{
         token = '';

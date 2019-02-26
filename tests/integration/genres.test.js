@@ -1,7 +1,7 @@
 const request = require('supertest');
-let server;
 const {Genre} = require('../../models/genres');
 const {User} = require('../../models/user');
+let server;
 
 describe('/api/genres', ()=> {
     beforeEach(()=> { server = require('../../app'); })
@@ -42,6 +42,7 @@ describe('/api/genres', ()=> {
         });
     });
 
+   
     describe('POST genres', ()=> {
 
         //define the complete request payload and change the variables as needed
