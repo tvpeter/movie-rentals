@@ -1,10 +1,7 @@
 const request = require('supertest');
 const {User} = require('../../models/user');
-
-let server;
+let server, token;
 describe('auth middleware', ()=>{
-    let token;
-
     beforeEach(()=> {
         server = require('../../app');
         token = new User().generateAuthToken();
