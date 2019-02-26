@@ -1,10 +1,12 @@
 const request = require('supertest');
 const {User} = require('../../models/user');
+const {Genre} = require('../../models/genres');
 describe('auth middleware', ()=>{
     beforeEach(()=> {
         server = require('../../app');
     });
-    afterEach(()=> {
+    afterEach( async()=> {
+       await Genre.deleteMany({});
         server.close();
     })
     const genre = { title: 'The way things are going', year: 2019, publisher: 'Eleganza Gardens'}
