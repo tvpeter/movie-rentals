@@ -76,6 +76,7 @@ router.put('/:id', auth, async (req, res)=>{
         year : req.body.year,
         publisher : req.body.publisher
     }, { new: true});
+    
     if(!genre) return res.status(404).send('Movie not found');
 
     //change the resource

@@ -36,13 +36,13 @@ describe('/api/genres', ()=> {
 
         });
 
-        it('should return 404 if given id is invalid', async ()=>{
+        it('should return 404 if the given id is invalid', async ()=>{
         const res = await request(server).get(`/api/genres/1`);
         expect(res.status).toBe(404);
 
         });
 
-        it('should return 404 if genre is not found with given id', async()=>{
+        it('should return 404 if genre with given id is not found', async()=>{
             const id = mongoose.Types.ObjectId();
             const res = await request(server).get(`/api/genres/${id}`);
             expect(res.status).toBe(404);
@@ -109,5 +109,63 @@ describe('/api/genres', ()=> {
 
     });
 
+    // describe('DELETE /:id', ()=> {
+
+
+    // });
+
+    describe('PUT /', ()=>{
+    //we insert then return its id and edit 
+
+    //return 400 if id is request is invalid
+    let req, token, id, newReq;
+    beforeEach ( async()=>{
+     req = { title: "The love in my eyes for you", year: 2019, publisher: "Eleganza Gardens City"};
+     token = new User().generateAuthToken();
+     const genre = new Genre(req);
+     await genre.save();
+     id = genre._id;
+     newReq = {title: 'Watching your emotions', year: 2018, publisher: 'Tales of a new life'}
+    });
+    
+    const exec =  async() => {
+    return await request(server).put(`/api/genres/${id}`).set('x-auth-token', token).send(newReq);
+    }
+
+    it('should return 401 if client is not logged in', async ()=> {
+        token = '';
+        const res = await exec();
+        expect(res.status).toBe(401);
+
+    });
+
+
+    it('should return 400 if request does not contain all the properties', async ()=> {
+        newReq.publisher = '';
+        const res = await exec();
+        expect(res.status).toBe(400);
+
+    });
+
+    //return 400 if req payload is not valid
+
+    //return 404 if not found
+    it('should return 404 if genre with the given id is not found', async ()=> {
+        id = mongoose.Types.ObjectId();
+
+        const res = await exec();
+        expect(res.status).toBe(404);
+
+    });
+
+    // update genre if request and id are valid
+    it('should update and return 200 if genre with the given id is found', async ()=> {
+        await exec();
+        const updatedGenre = await Genre.findById(id);
+
+        expect(updatedGenre.publisher).toMatch(/Tales of a new life/);
+    });
+
+    });
 
 });
