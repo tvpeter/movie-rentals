@@ -87,7 +87,7 @@ router.put('/:id', auth, async (req, res)=>{
      res.send(genre);
 });
 
-router.delete('/:id', [auth, admin], async (req, res)=>{
+router.delete('/:id', [auth, admin, validateObjectId], async (req, res)=>{
     //validate the request
     // const schema = {
     //     id: Joi.integer().required()
