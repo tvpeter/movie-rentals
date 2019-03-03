@@ -67,9 +67,27 @@ it('should return 400 if movieId is not provided', async ()=> {
 
 });
 
-//return 403 if user is not admin
-// return 400 if movieId is not provided
 // return 404 if rental is not found
+it('should return 404 if rental not found for the given movie/customer id', async ()=>{
+    await Rental.remove({});
+    
+    const res = await exec();
+
+    expect(res.status).toBe(404);
+
+
+});
+
+it('should return 400 if rental date is already set', async ()=> {
+    rental.dateReturned = new Date();
+    await rental.save();
+    
+    const res = await exec();
+
+    expect(res.status).toBe(400);
+});
+
+//return 403 if user is not admin
 // return 200 if request is valid
 // set the return date
 // calculate the rental fee
