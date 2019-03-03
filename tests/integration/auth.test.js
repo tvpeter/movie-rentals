@@ -3,7 +3,7 @@ const {User} = require('../../models/user');
 const {Genre} = require('../../models/genres');
 
 describe('auth middleware', ()=>{
-    let token;
+    let token; let server;
     beforeEach(()=> {
         server = require('../../app');
         token = new User().generateAuthToken();

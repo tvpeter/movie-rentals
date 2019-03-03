@@ -2,6 +2,7 @@ const {User} = require('../../models/user');
 const request = require('supertest');
 const {Rental} = require('../../models/rentals');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 describe('/api/returns', ()=> {
     let token, customerId, movieId, rental;
@@ -26,10 +27,11 @@ describe('/api/returns', ()=> {
             rentalFee: 8
         });
         await rental.save();
-    })
+    });
+
     afterEach( async ()=> {  
-       await server.close();
         await Rental.deleteMany({});
+        await server.close();
     })
 
     const exec = () => {
@@ -87,10 +89,47 @@ it('should return 400 if rental date is already set', async ()=> {
     expect(res.status).toBe(400);
 });
 
+it('should return 400 if rental date is already set', async ()=> {
+    rental.dateReturned = new Date();
+    await rental.save();
+    
+    const res = await exec();
+
+    expect(res.status).toBe(400);
+});
+
+it('should return 200 if rental is found', async ()=> {
+    
+    const res = await exec();
+
+    expect(res.status).toBe(200);
+});
+
+it('should set the returnDate for a valid request', async ()=> {
+    
+    const res = await exec();
+
+    const rentalInDb = Rental.findById(rental._id);
+
+    const diff = new Date() - rentalInDb.dateReturned;
+
+    expect(diff).toBeLessThan(10 * 1000);
+});
+
+it('should calculate the rental fee', async ()=> {
+    rental.dateOut = moment().add(-7, 'days').toDate();
+    await rental.save();
+
+    const res = await exec();
+
+    const rentalInDb = Rental.findById(rental._id);
+
+    rentalInDb.rentalFee = (rentalInDb.dateOut - new Date()) * 2;
+
+    expect(rentalInDb.rentalFee).toBeDefined();
+});
+
 //return 403 if user is not admin
-// return 200 if request is valid
-// set the return date
-// calculate the rental fee
 // increase the stock
 // return the rental
 

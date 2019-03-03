@@ -7,8 +7,8 @@ describe('/api/genres', ()=> {
   let server;
     beforeEach(()=> { server = require('../../app'); })
     afterEach( async ()=> { 
-       await Genre.remove({});
-      await server.close(); 
+       await Genre.deleteMany({});
+       await server.close(); 
     })
 
     describe('get genres', ()=> {

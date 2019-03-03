@@ -19,6 +19,7 @@
     "joi-objectid": "2.0.0",
     "jsonwebtoken": "8.4.0",
     "lodash": "4.17.11",
+    "moment": "2.24.0",
     "mongoose": "5.4.7",
     "nodemon": "1.18.10",
     "winston": "2.4.4",
