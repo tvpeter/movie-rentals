@@ -7,6 +7,7 @@ const rentals = require('../routes/rentals');
 const users = require('../routes/user');
 const auth = require('../routes/auth');
 const error = require('../middlewares/error');
+const returns = require('../routes/returns');
 
 module.exports = function (app) {
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use('/api/returns', returns);
 app.use('/', index);
 
 //special error middleware

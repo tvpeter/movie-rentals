@@ -2,9 +2,9 @@ const request = require('supertest');
 const {Genre} = require('../../models/genres');
 const {User} = require('../../models/user');
 const mongoose = require('mongoose');
-let server;
 
 describe('/api/genres', ()=> {
+  let server;
     beforeEach(()=> { server = require('../../app'); })
     afterEach( async ()=> { 
        await Genre.deleteMany({});
@@ -110,11 +110,7 @@ describe('/api/genres', ()=> {
 
     });
 
-    // describe('DELETE /:id', ()=> {
-
-
-    // });
-
+    
     describe('PUT /', ()=>{
     //we insert then return its id and edit 
 
