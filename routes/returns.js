@@ -2,21 +2,37 @@ const express = require('express');
 const router = express.Router();
 const {Rental} = require('../models/rentals');
 const auth = require('../middlewares/auth');
+const {Movie} = require('../models/movies');
+const Joi = require('joi');
+const validate = require('../middlewares/validate');
 
+router.post('/', [auth, validate(validateReturns)], async(req, res)=> {
 
-router.post('/', auth, async(req, res)=> {
+    // if(!req.body.customerId) return res.status(400).send('CustomerID is not provided');
+    // if(!req.body.movieId) return res.status(400).send('MovieID is not provided');
 
-    if(!req.body.customerId) return res.status(400).send('CustomerID is not provided');
-    if(!req.body.movieId) return res.status(400).send('MovieID is not provided');
+    const rental = await Rental.lookup(req.body.customerId, req.body.movieId);
     
-    const rental = await Rental.findOne({'movie._id': req.body.movieId, 'customer._id': req.body.customerId})
     if(!rental) return res.status(404).send('Rental with given customerid/movieid not found');
 
     if(rental.dateReturned) return res.status(400).send('Return already processed');
-    rental.dateReturned = new Date();
+
+    rental.return(); 
     await rental.save();
-    return res.status(200).send();
+
+    await Movie.update({_id: rental.movie._id}, { $inc : { numberInStock: 1}});
+
+    return res.send(rental);
     
 });
+
+function validateReturns(req){
+    const schema = {
+        movieId: Joi.objectId().required(),
+        customerId: Joi.objectId().required()
+    }
+    return Joi.validate(req, schema);
+    
+}
 
 module.exports = router;

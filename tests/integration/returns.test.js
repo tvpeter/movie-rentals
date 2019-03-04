@@ -3,15 +3,27 @@ const request = require('supertest');
 const {Rental} = require('../../models/rentals');
 const mongoose = require('mongoose');
 const moment = require('moment');
+const {Movie} = require('../../models/movies');
 
 describe('/api/returns', ()=> {
-    let token, customerId, movieId, rental;
+    let token, customerId, movieId, rental, movie;
 
     
     beforeEach( async()=> { server = require('../../app'); 
     customerId = mongoose.Types.ObjectId();
     movieId = mongoose.Types.ObjectId();
     token = new User().generateAuthToken();
+
+        movie = new Movie({
+            _id: movieId,
+            title: 'Movie title',
+            numberInStock: 10,
+            dailyRentalRate: 2,
+            genre : {
+                title: 'genre title'
+            }
+        });
+        await movie.save();
 
          rental = new Rental({
             customer: {
@@ -31,6 +43,7 @@ describe('/api/returns', ()=> {
 
     afterEach( async ()=> {  
         await Rental.deleteMany({});
+        await Movie.deleteMany({});
         await server.close();
     })
 
@@ -129,10 +142,25 @@ it('should calculate the rental fee', async ()=> {
     expect(rentalInDb.rentalFee).toBeDefined();
 });
 
-//return 403 if user is not admin
-// increase the stock
-// return the rental
+it('should increase the movie stock', async ()=> {
+   
+    const res = await exec();
 
+    const rentedMovie = await Rental.findById(movieId);
+
+    expect(rentedMovie.numberInStock).toBe(rentedMovie.numberInStock+1);
+});
+
+it('should return rental in the body of the response', async ()=> {
+   
+    const res = await exec();
+
+    const rentalInDb = await Rental.findById(rental._id);
+
+    expect(Object.keys(res.body)).toEqual(expect.arrayContaining(['dateOut', 'movie', 'customer', 'rentalFee', 'dateReturned']));
+});
+
+//return 403 if user is not admin
 
 
 });
