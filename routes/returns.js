@@ -17,6 +17,7 @@ router.post('/', [auth, validate(validateReturns)], async(req, res)=> {
 
     if(rental.dateReturned) return res.status(400).send('Return already processed');
 
+    //return method to calculate set the return date and calculate the rental fee
     rental.return(); 
     await rental.save();
 
