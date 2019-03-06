@@ -1,3 +1,4 @@
 {
-    "jwtPrivateKey":"rentals_jwtPrivateKey"
+    "jwtPrivateKey":"rentals_jwtPrivateKey",
+    "db":"movie-rentalsdb"
 }
